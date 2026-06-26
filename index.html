@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>サイバー事件アーカイブ｜2つの実話で学ぶ情報セキュリティ</title>
+<meta name="description" content="日本で実際に起きた2つの情報セキュリティ事件（病院のランサムウェア／NTT西日本系の内部不正）を、紙芝居・判断ゲーム・数字・対比で体験しながら学べるWebアプリ。">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%236a4cf0'/%3E%3Cpath d='M16 5l9 3v7c0 6-4 9-9 11-5-2-9-5-9-11V8z' fill='%23fff'/%3E%3Cpath d='M11 16l3.5 3.5L21 12' fill='none' stroke='%236a4cf0' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=M+PLUS+Rounded+1c:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- 読書進捗バー -->
+<div id="progress" aria-hidden="true"><span></span></div>
+
+<!-- ヘッダー -->
+<header id="topbar">
+  <button class="brand" data-go="home" aria-label="ホームへ">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <span class="brand-text">サイバー事件アーカイブ</span>
+  </button>
+  <nav id="topnav" aria-label="メインメニュー"></nav>
+  <button id="motion-toggle" class="ghost-btn" title="アニメーションの切り替え" aria-pressed="false">
+    <span class="mt-on">✦ 動き ON</span><span class="mt-off">— 動き OFF</span>
+  </button>
+</header>
+
+<main id="app">
+
+  <!-- ===== ホーム ===== -->
+  <section id="view-home" class="view is-active" tabindex="-1">
+    <div class="hero">
+      <p class="hero-kicker"></p>
+      <h1 class="hero-title"></h1>
+      <p class="hero-lead"></p>
+      <div class="hero-cta">
+        <button class="btn btn-primary" data-go="story">▶ さっそく体験する</button>
+        <button class="btn btn-ghost" data-go="game">あなたならどうする？</button>
+      </div>
+      <div class="hero-scrollhint" aria-hidden="true">スクロール / 下のカードから選ぶ<span class="chev">⌄</span></div>
+    </div>
+
+    <div class="hub-wrap">
+      <h2 class="section-h">4つの入り口</h2>
+      <div id="hub" class="hub-grid"></div>
+    </div>
+
+    <div class="cases-strip">
+      <article class="case-card case-hospital" data-go="story" data-arg="hospital">
+        <span class="case-tag">外からの攻撃</span>
+        <h3>大阪の大病院<br>ランサムウェア事件</h3>
+        <p class="case-when">2022年10月31日</p>
+        <p class="case-one"></p>
+        <span class="case-link">この事件を見る →</span>
+      </article>
+      <article class="case-card case-ntt" data-go="story" data-arg="ntt">
+        <span class="case-tag">内からの不正</span>
+        <h3>NTT西日本系<br>個人情報928万件 流出</h3>
+        <p class="case-when">2013〜2023年（約10年）</p>
+        <p class="case-one"></p>
+        <span class="case-link">この事件を見る →</span>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== 紙芝居 ===== -->
+  <section id="view-story" class="view" tabindex="-1">
+    <div class="story-switch">
+      <button class="sw-btn" data-story="hospital"><i class="dot dot-h"></i>病院（外からの攻撃）</button>
+      <button class="sw-btn" data-story="ntt"><i class="dot dot-n"></i>NTT（内からの不正）</button>
+    </div>
+
+    <div id="stage" class="stage">
+      <div class="stage-art"><div id="art-slot"></div></div>
+      <div class="stage-text">
+        <p class="scene-count"><span id="scene-now">1</span> / <span id="scene-total">9</span></p>
+        <h2 id="scene-title" class="scene-title"></h2>
+        <div id="scene-body" class="scene-body"></div>
+      </div>
+    </div>
+
+    <div class="stage-controls">
+      <button id="prev-scene" class="btn btn-ghost">← 前へ</button>
+      <div id="scene-dots" class="scene-dots" aria-hidden="true"></div>
+      <button id="next-scene" class="btn btn-primary">次へ →</button>
+    </div>
+
+    <div id="story-end" class="story-end" hidden>
+      <p class="end-line"></p>
+      <div class="end-cta">
+        <button class="btn btn-primary" data-go="game">判断ゲームに挑戦 →</button>
+        <button class="btn btn-ghost" id="story-other">もう片方の事件を見る</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 判断ゲーム ===== -->
+  <section id="view-game" class="view" tabindex="-1">
+    <div id="game-intro" class="game-intro">
+      <span class="badge-role">あなたは 情報システム担当</span>
+      <h2 class="section-h">あなたなら、どうする？</h2>
+      <p class="game-intro-lead"></p>
+      <button class="btn btn-primary" id="game-start">スタート（全8問）</button>
+    </div>
+
+    <div id="game-play" class="game-play" hidden>
+      <div class="game-top">
+        <span class="game-qno">Q<span id="q-now">1</span> <span class="game-qtotal">/ 8</span></span>
+        <span class="game-score">守れた数 <b id="g-score">0</b></span>
+      </div>
+      <div class="game-bar"><span id="game-bar-fill"></span></div>
+      <p id="q-scene" class="q-scene"></p>
+      <div id="q-options" class="q-options"></div>
+      <div id="q-feedback" class="q-feedback" hidden>
+        <p class="fb-verdict"></p>
+        <p class="fb-detail"></p>
+        <p class="fb-lesson"></p>
+        <button class="btn btn-primary" id="q-next">次へ →</button>
+      </div>
+    </div>
+
+    <div id="game-result" class="game-result" hidden>
+      <p class="gr-score">8問中 <b id="gr-correct">0</b> 問 守れた！</p>
+      <h2 id="gr-rank" class="gr-rank"></h2>
+      <p id="gr-msg" class="gr-msg"></p>
+      <div class="end-cta">
+        <button class="btn btn-ghost" id="game-retry">もう一度</button>
+        <button class="btn btn-primary" data-go="compare">2つの事件を比べる →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 数字で見る ===== -->
+  <section id="view-numbers" class="view" tabindex="-1">
+    <h2 class="section-h">数字で見る被害</h2>
+    <p class="section-sub">スクロールすると数字が動き出す。被害の“大きさ”を体感しよう。</p>
+    <div class="num-block">
+      <h3 class="num-head num-head-h"><i class="dot dot-h"></i><span></span></h3>
+      <div id="num-hospital" class="num-grid"></div>
+    </div>
+    <div class="num-block">
+      <h3 class="num-head num-head-n"><i class="dot dot-n"></i><span></span></h3>
+      <div id="num-ntt" class="num-grid"></div>
+    </div>
+  </section>
+
+  <!-- ===== 比べる ===== -->
+  <section id="view-compare" class="view" tabindex="-1">
+    <h2 class="section-h">2つの事件を比べる</h2>
+    <p id="compare-lead" class="section-sub"></p>
+    <div class="cmp-head">
+      <div class="cmp-side cmp-h"><span class="cmp-tag"></span><b class="cmp-name"></b></div>
+      <div class="cmp-vs">VS</div>
+      <div class="cmp-side cmp-n"><span class="cmp-tag"></span><b class="cmp-name"></b></div>
+    </div>
+    <div id="cmp-rows" class="cmp-rows"></div>
+    <p id="compare-punch" class="compare-punch"></p>
+  </section>
+
+  <!-- 教訓まとめ（全ビュー共通の締め） -->
+  <section id="takeaways" class="takeaways">
+    <h2 class="section-h" id="ta-title"></h2>
+    <div id="ta-grid" class="ta-grid"></div>
+  </section>
+
+</main>
+
+<!-- フッター -->
+<footer id="site-footer">
+  <p class="foot-note">本サイトは公開されている調査報告書・報道をもとにした<strong>学習用のまとめ</strong>です。数値や時刻は出典により幅がある場合があります。</p>
+  <details class="sources">
+    <summary>出典・参考資料</summary>
+    <ul id="src-list"></ul>
+  </details>
+  <p class="foot-copy">Educational use only.</p>
+</footer>
+
+<!-- 用語ポップ -->
+<div id="term-pop" class="term-pop" hidden role="dialog" aria-modal="false">
+  <button class="term-close" aria-label="閉じる">×</button>
+  <h4 class="term-h"></h4>
+  <p class="term-b"></p>
+</div>
+<div id="term-backdrop" hidden></div>
+
+<script src="js/data.js"></script>
+<script src="js/art.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+# 報告書PDFなど大きな/配布対象外のファイルは公開しない
+*.pdf
+
+# OS / エディタ
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+.vscode/
+.idea/
+
+# 一時ファイル
+*.tmp
+*.log
