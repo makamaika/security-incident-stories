@@ -8,13 +8,13 @@
   --ink:#1b2334;
   --ink-soft:#5d6779;
   --line:#e2e7f1;
-  --hospital:#e23b3b;
+  --hospital:#c92a2a;
   --hospital-soft:#fde7e5;
-  --ntt:#6a4cf0;
+  --ntt:#5b3ee0;
   --ntt-soft:#eae4fe;
-  --good:#13966b;
+  --good:#0e7a56;
   --good-soft:#dcf3ea;
-  --bad:#e23b3b;
+  --bad:#c92a2a;
   --bad-soft:#fde7e5;
   --shadow:0 10px 30px rgba(28,40,80,.10);
   --shadow-sm:0 4px 14px rgba(28,40,80,.08);
@@ -49,6 +49,17 @@ body.motion-off *{animation:none!important; transition:none!important;}
 b,strong{font-weight:700;}
 button{font-family:inherit;}
 
+/* キーボード操作のフォーカスを可視化（マウス操作時は出さない） */
+:where(button,a,[tabindex],[data-term],summary):focus-visible{
+  outline:3px solid var(--ntt); outline-offset:2px; border-radius:8px;
+}
+
+/* OSの「動きを減らす」設定に追従 */
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto;}
+  .hero-scrollhint .chev{animation:none;}
+}
+
 /* ---------- 進捗バー ---------- */
 #progress{position:fixed; top:0; left:0; right:0; height:4px; z-index:60; background:transparent;}
 #progress span{display:block; height:100%; width:0%;
@@ -57,7 +68,10 @@ button{font-family:inherit;}
 /* ---------- ヘッダー ---------- */
 #topbar{
   position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:12px;
-  padding:10px clamp(14px,4vw,28px); background:color-mix(in srgb,var(--surface) 86%, transparent);
+  padding:10px clamp(14px,4vw,28px);
+  background:var(--surface); /* color-mix 非対応ブラウザ向けフォールバック */
+  background:color-mix(in srgb,var(--surface) 86%, transparent);
+  -webkit-backdrop-filter:saturate(160%) blur(10px);
   backdrop-filter:saturate(160%) blur(10px); border-bottom:1px solid var(--line);
 }
 .brand{display:flex; align-items:center; gap:10px; background:none; border:0; cursor:pointer; color:var(--ink); padding:4px;}
@@ -214,7 +228,7 @@ term::after{content:"?"; font-size:.62em; vertical-align:super; margin-left:1px;
 .gr-score{font-size:1.05rem; color:var(--ink-soft); margin:0 0 4px;}
 .gr-score b{font-size:1.9rem; color:var(--ink); font-family:var(--round);}
 .gr-rank{font-family:var(--round); font-weight:800; font-size:clamp(1.4rem,6vw,2rem); margin:6px 0 10px;
-  background:linear-gradient(90deg,var(--hospital),var(--ntt)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  background:linear-gradient(90deg,var(--hospital),var(--ntt)); color:var(--ntt);}
 .gr-msg{max-width:520px; margin:0 auto 24px; color:var(--ink-soft);}
 
 /* ===================== 数字 ===================== */
@@ -261,8 +275,11 @@ body.motion-off .cmp-row{opacity:1; transform:none;}
 .ta-grid{display:grid; grid-template-columns:1fr; gap:12px; margin-top:16px;}
 .ta-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:20px 18px; box-shadow:var(--shadow-sm);
   display:flex; gap:14px; align-items:flex-start;}
-.ta-n{font-family:var(--round); font-weight:800; font-size:1.6rem; color:transparent;
-  background:linear-gradient(135deg,var(--hospital),var(--ntt)); -webkit-background-clip:text; background-clip:text; flex:none;}
+.ta-n{font-family:var(--round); font-weight:800; font-size:1.6rem; color:var(--ntt);
+  background:linear-gradient(135deg,var(--hospital),var(--ntt)); flex:none;}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .gr-rank,.ta-n{-webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent;}
+}
 .ta-card h4{margin:2px 0 5px; font-family:var(--round); font-weight:800; font-size:1.06rem;}
 .ta-card p{margin:0; color:var(--ink-soft); font-size:.9rem; line-height:1.7;}
 
@@ -273,7 +290,7 @@ body.motion-off .cmp-row{opacity:1; transform:none;}
 .sources summary{cursor:pointer; font-weight:700; color:var(--ink); margin:10px 0;}
 .sources ul{margin:6px 0 0; padding-left:18px;}
 .sources li{margin-bottom:8px; line-height:1.6; word-break:break-word;}
-.sources a{color:var(--ntt);}
+.sources a{color:var(--ntt); text-decoration:underline;}
 .foot-copy{margin-top:18px; opacity:.7; font-size:.74rem;}
 
 /* ===================== 用語ポップ ===================== */

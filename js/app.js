@@ -12,8 +12,10 @@
   let MOTION = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   function applyMotion() {
     document.body.classList.toggle("motion-off", !MOTION);
+    document.documentElement.style.scrollBehavior = MOTION ? "smooth" : "auto";
     const t = $("#motion-toggle"); if (t) t.setAttribute("aria-pressed", String(MOTION));
     if (!MOTION) { $$(".reveal").forEach(e => e.classList.add("in")); $$(".cmp-row").forEach(e => e.classList.add("in")); finalizeCounters(); }
+    else { $$(".num-card").forEach(c => { delete c.dataset.done; }); triggerVisible(); }
   }
 
   /* ---------- ビュー切替（ルーター） ---------- */
@@ -25,6 +27,7 @@
   let currentView = "home";
   function switchView(id, arg) {
     if (!VIEWS.includes(id)) id = "home";
+    if (typeof staggerTimers !== "undefined" && staggerTimers.length) { staggerTimers.forEach(clearTimeout); staggerTimers = []; }
     currentView = id;
     VIEWS.forEach(v => $("#view-" + v).classList.toggle("is-active", v === id));
     $$("#topnav button").forEach(b => b.classList.toggle("active", b.dataset.go === id));
@@ -103,6 +106,7 @@
       if (MOTION) staggerTimers.push(setTimeout(() => p.classList.add("show"), 180 + i * 520));
       else p.classList.add("show");
     });
+    $$("#scene-body [data-term]").forEach(t => { t.setAttribute("role", "button"); t.setAttribute("tabindex", "0"); t.setAttribute("aria-haspopup", "dialog"); });
     $("#prev-scene").disabled = sceneIdx === 0;
     $("#next-scene").textContent = sceneIdx === s.scenes.length - 1 ? "まとめ →" : "次へ →";
     $("#story-end").hidden = true;
@@ -166,7 +170,7 @@
       b.disabled = true;
       const correct = curOpts[j].ok;
       if (correct) { b.classList.add("correct"); $(".mark", b).textContent = "✓ 正解"; }
-      if (j === i && !ok) { b.classList.add("wrong"); $(".mark", b).textContent = "✕"; }
+      if (j === i && !ok) { b.classList.add("wrong"); $(".mark", b).textContent = "✕ 不正解"; }
     });
     const fb = $("#q-feedback"); fb.hidden = false;
     const v = $(".fb-verdict", fb);
@@ -263,12 +267,19 @@
   }
 
   /* ====================== 用語ポップ ====================== */
-  function openTerm(key) {
+  let lastTermTrigger = null;
+  function openTerm(key, trigger) {
     const g = D.glossary[key]; if (!g) return;
+    lastTermTrigger = trigger || document.activeElement;
     $(".term-h").textContent = g.term; $(".term-b").textContent = g.body;
     $("#term-pop").hidden = false; $("#term-backdrop").hidden = false;
+    requestAnimationFrame(() => { const c = $(".term-close"); if (c) c.focus(); });
   }
-  function closeTerm() { $("#term-pop").hidden = true; $("#term-backdrop").hidden = true; }
+  function closeTerm() {
+    $("#term-pop").hidden = true; $("#term-backdrop").hidden = true;
+    if (lastTermTrigger && lastTermTrigger.focus) { lastTermTrigger.focus(); }
+    lastTermTrigger = null;
+  }
 
   /* ====================== 監視（IntersectionObserver） ====================== */
   let revealIO, countIO;
@@ -314,8 +325,8 @@
     document.addEventListener("click", (e) => {
       const go = e.target.closest("[data-go]");
       if (go) { switchView(go.dataset.go, go.dataset.arg); return; }
-      const t = e.target.closest("term");
-      if (t && t.dataset.term) { openTerm(t.dataset.term); return; }
+      const t = e.target.closest("[data-term]");
+      if (t) { openTerm(t.dataset.term, t); return; }
     });
     // 紙芝居
     $("#next-scene").addEventListener("click", nextScene);
@@ -335,6 +346,8 @@
     // キーボード（紙芝居）
     document.addEventListener("keydown", (e) => {
       if ($("#term-pop").hidden === false && e.key === "Escape") return closeTerm();
+      const af = document.activeElement;
+      if (af && af.matches && af.matches("[data-term]") && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); return openTerm(af.dataset.term, af); }
       if (currentView !== "story") return;
       if (e.key === "ArrowRight") nextScene();
       if (e.key === "ArrowLeft") prevScene();

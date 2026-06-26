@@ -70,7 +70,7 @@
       <!-- 常時接続のパイプ -->
       <path d="M136 188 H250" stroke="var(--accent)" stroke-width="8" stroke-dasharray="2 10" stroke-linecap="round"/>
       <!-- 侵入者 -->
-      <g transform="translate(20,150)"><circle cx="0" cy="0" r="9" fill="var(--art-ink)"/><rect x="-7" y="9" width="14" height="20" rx="6" fill="var(--art-ink)"/></g>
+      <g transform="translate(30,150)"><circle cx="0" cy="0" r="9" fill="var(--art-ink)"/><rect x="-7" y="9" width="14" height="20" rx="6" fill="var(--art-ink)"/></g>
     `)),
 
     "h-spread": S(stage(`
@@ -113,8 +113,8 @@
         <path d="M-26 4 l16 16 l34 -38" fill="none" stroke="var(--accent)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
       </g>
       <g transform="translate(78,196)"><rect x="-26" y="-18" width="52" height="36" rx="5" fill="var(--art-paper)" stroke="var(--art-ink)" stroke-width="3"/><circle cx="0" cy="0" r="9" fill="none" stroke="var(--art-ink)" stroke-width="3"/><circle cx="0" cy="0" r="2.5" fill="var(--art-ink)"/><text x="0" y="34" text-anchor="middle" font-size="11" fill="var(--art-ink)">backup</text></g>
-      <text x="322" y="120" text-anchor="middle" font-size="34" fill="var(--accent)" font-weight="800">73</text>
-      <text x="322" y="142" text-anchor="middle" font-size="13" fill="var(--art-ink)">日で復旧</text>
+      <text x="306" y="120" text-anchor="middle" font-size="34" fill="var(--accent)" font-weight="800">73</text>
+      <text x="306" y="142" text-anchor="middle" font-size="13" fill="var(--art-ink)">日で復旧</text>
     `)),
 
     "h-lesson": S(stage(`
@@ -216,6 +216,7 @@
 
     "n-fallout": S(stage(`
       ${Array.from({length:22}).map((_,i)=>{const x=40+(i*37%320),y=60+((i*53)%70);return `<circle cx="${x}" cy="${y}" r="3.4" fill="var(--accent)" opacity="0.7"/>`}).join("")}
+      <rect x="104" y="94" width="192" height="36" rx="8" fill="var(--art-bg)" opacity="0.82"/>
       <text x="200" y="120" text-anchor="middle" font-size="30" fill="var(--accent)" font-weight="800">928万件</text>
       <!-- 崩れる柱（引責辞任） -->
       <g transform="translate(110,200)"><rect x="-22" y="-44" width="44" height="44" rx="3" fill="var(--art-paper)" stroke="var(--art-ink)" stroke-width="3" transform="rotate(-12)"/><rect x="-30" y="0" width="60" height="10" rx="3" fill="var(--art-ink)"/></g>
